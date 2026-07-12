@@ -1,0 +1,6 @@
+{
+  "name": "ScaleV Masterclass",
+  "description": "Platform pembelajaran terstruktur seperti Coursera untuk 34 petunjuk marketing video",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
