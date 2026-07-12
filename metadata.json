@@ -1,5 +1,5 @@
 {
-  "name": "SKILL HUB | Mastery Skill Advisor",
+  "name": "Skill Hub",
   "description": "Platform pembelajaran terstruktur seperti Coursera untuk 34 petunjuk marketing video",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
