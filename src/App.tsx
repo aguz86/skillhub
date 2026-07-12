@@ -16,7 +16,7 @@ export default function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const { completedLessons, markComplete, isCompleted } = useProgress();
   const { totalLessons, completedCount, percentage } = getCourseStats(completedLessons);
-  const { user, loading, loginWithGoogle, logout } = useAuth();
+  const { user, loading, error, loginWithGoogle, logout } = useAuth();
 
   // Automatically close sidebar on mobile when a lesson is selected
   useEffect(() => {
@@ -52,9 +52,18 @@ export default function App() {
       <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
         <div className="max-w-md w-full bg-white p-8 rounded-xl shadow-lg text-center">
           <div className="mb-8">
-            <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight mb-2">ScaleV Masterclass</h1>
+            <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight mb-2">Masterclass</h1>
             <p className="text-gray-500">Masuk untuk mengakses materi pembelajaran</p>
           </div>
+          
+          {error && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm text-left">
+              <p className="font-semibold mb-1">Gagal masuk:</p>
+              <p>{error}</p>
+              <p className="mt-2 text-xs">💡 Tips: Jika popup diblokir, klik tombol ikon kotak dengan tanda panah di pojok kanan atas layar ini untuk membuka aplikasi di tab baru, lalu coba login kembali.</p>
+            </div>
+          )}
+
           <button
             onClick={loginWithGoogle}
             className="w-full flex items-center justify-center gap-3 px-6 py-4 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors font-medium text-lg shadow-sm"
