@@ -1,12 +1,15 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User, onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
-import { auth, googleProvider } from '../lib/firebase';
+
+interface User {
+  uid: string;
+  displayName: string;
+}
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
   error: string | null;
-  loginWithGoogle: () => Promise<void>;
+  loginWithPin: (pin: string) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -14,7 +17,7 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
   error: null,
-  loginWithGoogle: async () => {},
+  loginWithPin: async () => {},
   logout: async () => {},
 });
 
@@ -26,35 +29,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
+    const loggedInUser = localStorage.getItem('userPinLoggedIn');
+    if (loggedInUser === 'true') {
+      setUser({ uid: 'student', displayName: 'Student' });
+    } else {
+      setUser(null);
+    }
+    setLoading(false);
   }, []);
 
-  const loginWithGoogle = async () => {
+  const loginWithPin = async (pin: string) => {
     setError(null);
-    try {
-      await signInWithPopup(auth, googleProvider);
-    } catch (err: any) {
-      console.error("Error signing in with Google:", err);
-      setError(err.message || "Gagal masuk dengan Google. Pastikan popup tidak diblokir atau coba buka di tab baru.");
+    if (pin === '100699') {
+      localStorage.setItem('userPinLoggedIn', 'true');
+      setUser({ uid: 'student', displayName: 'Student' });
+    } else {
+      setError("PIN salah. Silakan coba lagi.");
     }
   };
 
   const logout = async () => {
-    try {
-      await signOut(auth);
-    } catch (err: any) {
-      console.error("Error signing out:", err);
-      setError(err.message || "Gagal keluar.");
-    }
+    localStorage.removeItem('userPinLoggedIn');
+    setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, error, loginWithGoogle, logout }}>
+    <AuthContext.Provider value={{ user, loading, error, loginWithPin, logout }}>
       {children}
     </AuthContext.Provider>
   );
